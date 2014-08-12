@@ -27,19 +27,34 @@ class SlidingPiece < Piece
            [1, -1],   # bottom right
            [-1, -1],  # bottome left
            [1, 1]]    # top right
+           
+  ORTH  = [[0, 1],    # up
+           [1, 0],    # right
+           [0, -1],   # down
+           [-1, 0]]   # left
   
   def moves(direction)
-    moves = direction.map do |dx, dy|
-      [pos[0]] + dx. pos[1] + dy]
-    end.select do |row, col|
-      [row, col].all? do |position|
-        position.between?(0, @board.grid_size - 1)
-        @board[position]
+    valid_moves = []
+    direction.each do |dx, dy|
+      loop do 
+        next_square = [pos[0] + dx, pos[1] + dy]
+        if @board[next_square].nil?
+          valid_moves << next_square
+        elsif @board[next_square].color == self.color
+          break
+        else
+          valid_moves << next_square
+          break
+        end
       end
     end
     
-    moves.map { |pos| @board[pos] }
-  
+    valid_moves.select do |row, col|
+      [row, col].all? do |pos|
+        pos.between?(0, 7)
+      end
+    end.map { |pos| @board[pos] }
+    
   end
   
   def check_position
@@ -56,6 +71,25 @@ end
 class Bishop < SlidingPiece
            
   def moves_dir
-    @moves = moves(MOVES)
+    @moves = moves(DIAGS)
   end
 end
+
+class Rook < SlidingPiece
+  
+  def moves_dir
+    @moves = moves(ORTH)
+  end
+end
+
+class Queen < SlidingPiece
+  
+  def moves_dir
+    @moves = moves(DIAGS.concat(ORTH))
+  end
+end
+
+
+
+
+
