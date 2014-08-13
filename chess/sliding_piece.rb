@@ -22,7 +22,7 @@ class SlidingPiece < Piece
         counter += 1
       end
     end
-    valid_moves
+     valid_moves
   end
 end
 

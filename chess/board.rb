@@ -1,4 +1,5 @@
 require './pieces'
+require './exceptions'
 
 class Board
   attr_reader :board
@@ -46,43 +47,39 @@ class Board
   def in_check?(color) 
     king = find_king(color)
     @board.flatten.compact.any? do |piece|
-      piece.color == color && piece.moves.any?{ |move| move == king }
+      piece.color == color && piece.moves_dir.any?{ |move| move == king }
     end
-        #
-    # (0..7).each do |row|
-    #   (0..7).each do |col|
-    #     next if self[[row, col]].nil?
-    #     next if self[[row, col]].color == color
-    #
-    #      opposite_piece_moves = self[[row, col]].moves_dir
-    #      #self[[row, col]]
-    #     opposite_piece_moves.each do |pos|
-    #       return true if pos == king
-    #     end
-    #   end
-    # end
-    # false
-    # can any opponant pcs get him?
+
   end
   
   def find_king(color)
-    (0..7).each do |row|
-      (0..7).each do |col|
-        position = [row, col]
-        if self[[row, col]].symbol == "King" && self[[row, col]].color == color
-          return [row, col] 
-        end
-      end
-    end
+    self.color(color).find { |pc| pc.is_a?(King) }
+  end
+  
+  def color(color)
+    @board.flatten.compact.select { |pc| pc.color == color }
   end
   
   def move(start, end_pos)
-    raise PositionError.new("No ")
+    begin
+      if self[start].nil?
+        raise PositionError.new("No piece to move at that position!")
+      end
+      if self[start].moves_dir.include?(end_pos)
+        self[start].pos = end_pos
+      else
+        raise PositionError.new("Not a valid move")
+      end
+    rescue PositionError => error
+      puts error.message
+    end
   end
 end
 
- p board = Board.new
- position = [0, 2]
+ board = Board.new
+ position = [0, 0]
  board[position].moves_dir
 
-  board.in_check?(:B)
+ board.find_king(:B)
+ 
+ board.move([0, 0], [6, 0])
