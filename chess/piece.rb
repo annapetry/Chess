@@ -21,6 +21,14 @@ class Piece
     @color = color
     @moves = []
   end
+  
+  def inspect
+    { :pos => pos,
+      :symbol => symbol,
+      :color => color}.inspect
+  end
+  
+
 end
 
 
