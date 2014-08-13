@@ -67,6 +67,8 @@ class Board
       end
       if self[start].moves_dir.include?(end_pos)
         self[start].pos = end_pos
+        @board[end_pos[0]][end_pos[1]] = self[start]
+        @board[start[0]][start[1]] = nil
       else
         raise PositionError.new("Not a valid move")
       end
@@ -77,9 +79,9 @@ class Board
 end
 
  board = Board.new
- position = [0, 0]
+ position = [1, 0]
  board[position].moves_dir
 
  board.find_king(:B)
  
- board.move([0, 0], [6, 0])
+ board.move([1, 0], [2, 0])

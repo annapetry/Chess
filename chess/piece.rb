@@ -1,5 +1,6 @@
 class Piece
-  attr_reader :pos, :color, :moves
+  attr_accessor :pos
+  attr_reader :color, :moves
   
   DIAGS = [
        [-1, 1],   # top left
