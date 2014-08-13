@@ -6,9 +6,9 @@ class Board
   
   PIECES = [Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook]
   
-  def initialize
+  def initialize(pop = true)
     @board = Array.new(8) { Array.new(8) }
-    set_board
+    set_board if pop
   end
   
   def self.on_board? pos
@@ -76,9 +76,28 @@ class Board
       puts error.message
     end
   end
+  
+  def deep_dup
+    duped = Board.new(false)
+    
+    @board.flatten.compact.each do |piece|
+      new_piece = piece.class.new(piece.pos.dup, duped, piece.color)
+      duped.board[piece.pos[0]][piece.pos[1]] = new_piece
+    end
+    
+    p duped.object_id
+  end
+  
+  
+  
+  
+  
+  
 end
 
  board = Board.new
+ p board.object_id
+ board.deep_dup
  position = [1, 0]
  board[position].moves_dir
 

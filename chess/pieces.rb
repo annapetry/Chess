@@ -8,7 +8,11 @@ class Bishop < SlidingPiece
   end
   
   def symbol
-    "Bishop"
+    if color == :B
+      "\u265D"
+    else
+      "\u2657"
+    end
   end
 end
 
@@ -19,7 +23,11 @@ class Rook < SlidingPiece
   end
   
   def symbol
-    "Rook"
+    if color == :B
+      "\u265C"
+    else
+      "\u2656"
+    end
   end
 end
 
@@ -30,8 +38,12 @@ class Queen < SlidingPiece
   end
   
   def symbol
-    "Queen"
-  end
+    if color == :B
+      "\u265B"
+    else
+      "\u2655"
+    end
+  end 
 end
 
 class Knight < SteppingPiece
@@ -51,7 +63,11 @@ class Knight < SteppingPiece
   end
   
   def symbol
-    "Knight"
+    if color == :B
+      "\u265E"
+    else
+      "\u2658"
+    end
   end
   
 end
@@ -62,7 +78,11 @@ class King < SteppingPiece
   end
   
   def symbol
-    "King"
+    if color == :B
+      "\u265A"
+    else
+      "\u2654"
+    end
   end
 end
 
@@ -104,6 +124,10 @@ class Pawn < Piece
   end
   
   def symbol
-    "Pawn"
+    if color == :B
+      "\u265F"
+    else
+      "\u2659"
+    end
   end
 end
