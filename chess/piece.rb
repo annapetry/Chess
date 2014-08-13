@@ -1,6 +1,6 @@
 class Piece
   attr_accessor :pos
-  attr_reader:color, :moves
+  attr_reader :color, :moves
   
   DIAGS = [
        [-1, 1],   # top left
@@ -29,7 +29,12 @@ class Piece
       :color => color}.inspect
   end
   
-
+  def move_into_check?(end_pos)
+    duped_board = @board.deep_dup
+    duped_board.move!(self.pos, end_pos)
+    duped_board.in_check?(self.color)
+  end
+  
 end
 
 

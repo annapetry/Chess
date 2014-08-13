@@ -47,7 +47,9 @@ class Board
   def in_check?(color) 
     king = find_king(color)
     @board.flatten.compact.any? do |piece|
-      piece.color == color && piece.moves_dir.any?{ |move| move == king }
+      # NEED TO CHANGE THIS TO FIND KING IN MOVES ARRY
+      piece.color != color && 
+      piece.moves_dir.any?{ |pos| @board[pos[0]][pos[1]].is_a?(King) }
     end
 
   end
@@ -64,17 +66,30 @@ class Board
     begin
       if self[start].nil?
         raise PositionError.new("No piece to move at that position!")
-      end
-      if self[start].moves_dir.include?(end_pos)
-        self[start].pos = end_pos
-        @board[end_pos[0]][end_pos[1]] = self[start]
-        @board[start[0]][start[1]] = nil
+      elsif self[start].moves_dir.include?(end_pos)
+        if self[start].move_into_check?(end_pos)
+          raise PositionError.new("This move will put you into check.")
+        else
+          self[start].pos = end_pos
+          @board[end_pos[0]][end_pos[1]] = self[start]
+          @board[start[0]][start[1]] = nil
+        end
       else
         raise PositionError.new("Not a valid move")
       end
     rescue PositionError => error
       puts error.message
     end
+  end
+  
+  def move!(start, end_pos)
+    if self[start].nil?
+      raise PositionError.new("No piece to move at that position!")
+    elsif self[start].moves_dir.include?(end_pos)
+      self[start].pos = end_pos
+      @board[end_pos[0]][end_pos[1]] = self[start]
+      @board[start[0]][start[1]] = nil
+    end 
   end
   
   def deep_dup
@@ -85,22 +100,28 @@ class Board
       duped.board[piece.pos[0]][piece.pos[1]] = new_piece
     end
     
-    p duped.object_id
+    duped
   end
   
-  
-  
-  
-  
-  
+  def checkmate?(color)
+    if in_check?(color)
+      team = color(color)
+      team.each do |piece|
+        piece.moves_dir.each do |pos|
+          return false unless piece.move_into_check?(pos) 
+        end
+      end
+      true
+    else
+      false
+    end
+  end
 end
 
- board = Board.new
- p board.object_id
- board.deep_dup
- position = [1, 0]
- board[position].moves_dir
-
- board.find_king(:B)
- 
- board.move([1, 0], [2, 0])
+  board = Board.new(false)
+  board.board[2][4] = King.new([2, 4], board, :W)
+  board.board[0][5] = Rook.new([0, 5], board, :B)
+  board.board[1][5] = Rook.new([1, 5], board, :B) 
+  # board.move([6, 3], [5, 3])
+  
+  p board.checkmate?(:W)
