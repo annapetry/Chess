@@ -45,20 +45,23 @@ class Board
   
   def in_check?(color) 
     king = find_king(color)
-    
-    (0..7).each do |row|
-      (0..7).each do |col|
-        next if self[[row, col]].nil?
-        next if self[[row, col]].color == color
-        
-         opposite_piece_moves = self[[row, col]].moves_dir
-         #self[[row, col]]
-        opposite_piece_moves.each do |pos|
-          return true if pos == king
-        end
-      end
+    @board.flatten.compact.any? do |piece|
+      piece.color == color && piece.moves.any?{ |move| move == king }
     end
-    false
+        #
+    # (0..7).each do |row|
+    #   (0..7).each do |col|
+    #     next if self[[row, col]].nil?
+    #     next if self[[row, col]].color == color
+    #
+    #      opposite_piece_moves = self[[row, col]].moves_dir
+    #      #self[[row, col]]
+    #     opposite_piece_moves.each do |pos|
+    #       return true if pos == king
+    #     end
+    #   end
+    # end
+    # false
     # can any opponant pcs get him?
   end
   
@@ -73,6 +76,9 @@ class Board
     end
   end
   
+  def move(start, end_pos)
+    raise PositionError.new("No ")
+  end
 end
 
  p board = Board.new
