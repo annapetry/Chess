@@ -20,7 +20,6 @@ class Piece
     @pos = pos
     @board = board
     @color = color
-    @moves = []
   end
   
   def inspect

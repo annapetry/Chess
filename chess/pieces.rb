@@ -107,18 +107,27 @@ class Pawn < Piece
     end
   end
   
+  # TODO: Add support for pawn's initial move.
   def moves(direction)
     valid_moves = []
     direction.each do |(dx, dy)|
       next_square = [pos[0] + dx, pos[1] + dy]
-      break if !Board.on_board?(next_square)
-      
+      next if !Board.on_board?(next_square)
       if dy != 0
         next if @board[next_square].nil?
         valid_moves << next_square if @board[next_square].color != self.color
-      else        
+      else
+        if pos[0] == 1
+          initial_move = [pos[0] + 2, pos[1]]
+          valid_moves << initial_move if @board[initial_move].nil?
+        elsif pos[0] == 6
+          initial_move = [pos[0] - 2, pos[1]]
+          valid_moves << initial_move if @board[initial_move].nil?
+        end        
         valid_moves << next_square if @board[next_square].nil?   
       end
+      
+      
     end
     valid_moves
   end
@@ -131,3 +140,4 @@ class Pawn < Piece
     end
   end
 end
+

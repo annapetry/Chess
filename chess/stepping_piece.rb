@@ -6,7 +6,7 @@ class SteppingPiece < Piece
     valid_moves = []
     direction.each do |(dx, dy)|
       next_square = [pos[0] + dx, pos[1] + dy]
-      break if !Board.on_board?(next_square)
+      break unless Board.on_board?(next_square)
       if @board[next_square].nil?
         valid_moves << next_square
       elsif @board[next_square].color != self.color
